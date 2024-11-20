@@ -84,8 +84,8 @@
           };
 
           raylib = pkgs.stdenvNoCC.mkDerivation {
-            name = "vitasdk";
-            version = "master-v2.527";
+            name = "vitasdk-raylib";
+            version = "4.2";
 
             src = vitasdk-src;
             dontUnpack = true;
