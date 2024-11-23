@@ -26,7 +26,7 @@
             hash = "sha256-q40UNshM/rWwQKCn5teGf0z4FQCJOpMUu9KUsqfwIqE=";
           };
 
-          raylib-vita = ./raylib4Vita.tar.xz;
+          raylib-vita = ./raylib4Vita.tar.gz;
 
           vita-packages = import ./packages.nix {inherit pkgs;};
           vita-packages-list = lib.attrsets.mapAttrsToList (name: value: value) vita-packages;
@@ -71,13 +71,13 @@
                 tar xjf ${vitasdk-src} -C $VITASDK --strip-components=1
 
                 wrapProgram $out/bin/vita-makepkg \
-                  --prefix PATH : ${lib.makeBinPath [pkgs.curl]}
+                  --prefix PATH : ${lib.makeBinPath [pkgs.curl pkgs.libarchive pkgs.fakeroot]}
 
                 export VITASDK_ROOT="$VITASDK/arm-vita-eabi"
               ''
               + builtins.concatStringsSep "\n" (map (
                   package: ''
-                    tar -C $VITASDK_ROOT -Jxvf ${package}
+                    tar -C $VITASDK_ROOT -Jxf ${package}
                   ''
                 )
                 vita-packages-list);
@@ -106,11 +106,11 @@
                   --prefix PATH : ${lib.makeBinPath [pkgs.curl]}
 
                 export VITASDK_ROOT="$VITASDK/arm-vita-eabi"
-                 tar -C $VITASDK_ROOT -xvf ${raylib-vita}
+                 tar -C $VITASDK_ROOT -xf ${raylib-vita}
               ''
               + builtins.concatStringsSep "\n" (map (
                   package: ''
-                    tar -C $VITASDK_ROOT -Jxvf ${package}
+                    tar -C $VITASDK_ROOT -Jxf ${package}
                   ''
                 )
                 vita-packages-list);
